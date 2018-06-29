@@ -10,10 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.URI;
+import java.util.zip.GZIPInputStream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.http.HttpStatus.OK;
@@ -21,7 +23,7 @@ import static org.springframework.http.HttpStatus.OK;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(value = "classpath:deluge.properties")
-public class LoginControllerTest {
+public class LoginControllerIntegrationTest {
 
     @Autowired
     private LoginController loginController;
@@ -36,8 +38,12 @@ public class LoginControllerTest {
     private String json;
 
 
+    /**
+     * Checks if login authentication is successful. It nedds a running Deluge WebUI on the port 8112 on the local computer.
+     * @throws JsonProcessingException
+     */
     @Test
-    public void whenLoginWIthValidData_thenReturnTrueResponse() throws JsonProcessingException {
+    public void whenLoginWIthValidData_thenReturnTrueResponse() throws IOException {
         //given
         URI uri = URI.create(address + ":" + port + json);
 
